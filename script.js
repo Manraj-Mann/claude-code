@@ -143,6 +143,25 @@ function setReaderMessage(message, className) {
   readerBody.append(paragraph);
 }
 
+function addHeadingAnchors() {
+  const usedIds = new Set();
+  readerBody.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((heading) => {
+    const baseId = heading.textContent
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}_ -]/gu, "")
+      .trim()
+      .replace(/\s/g, "-");
+    let id = baseId;
+    let suffix = 1;
+    while (usedIds.has(id)) {
+      id = `${baseId}-${suffix}`;
+      suffix += 1;
+    }
+    usedIds.add(id);
+    heading.id = id;
+  });
+}
+
 function addCodeControls() {
   readerBody.querySelectorAll("pre").forEach((pre) => {
     if (pre.querySelector(".copy-button")) return;
@@ -184,6 +203,7 @@ async function openModule(module) {
     const markdown = await response.text();
     const html = window.marked.parse(markdown, { gfm: true, breaks: false });
     readerBody.innerHTML = window.DOMPurify.sanitize(html);
+    addHeadingAnchors();
     if (window.hljs) {
       readerBody.querySelectorAll("pre code").forEach((block) => window.hljs.highlightElement(block));
     }

@@ -4,7 +4,7 @@
     "category": "Documentation",
     "status": "Ready to grow",
     "date": "2026-11-12",
-    "summary": "A six-module field guide to project architecture, build commands, conventions, and durable context for Claude Code.",
+    "summary": "A complete guide to writing concise, useful project instructions for Claude Code, with examples and advanced patterns.",
     "file": "notes/claude-md-field-guide.md"
   }
 ]

@@ -1,286 +1,654 @@
-A structured learning path for mastering project documentation in Claude Code, compiled from official Claude Code tutorials and best practices.
+# CLAUDE.md: A Complete Tutorial
+
+**Master the art of persistent project context for Claude Code**
 
 ---
 
-## Overview
+## Table of Contents
 
-This lesson plan teaches you how to create a `CLAUDE.md` file—a markdown document that gives Claude Code persistent instructions about your project. A good `CLAUDE.md` ensures Claude understands your architecture, conventions, and project goals across all sessions.
-
-**Total Duration:** ~4-5 hours (self-paced)
-
----
-
-## Prerequisites
-
-- Basic understanding of markdown syntax
-- Familiarity with a coding project (even a simple one)
-- Claude Code installed and working
-- Access to your project repository
-
----
-
-## Module 1: Foundations (45 minutes)
-
-### 1.1 What is CLAUDE.md? (10 min)
-
-**Learning Objectives:**
-- Understand the purpose of CLAUDE.md files
-- Know when to create one vs. when to rely on auto memory
-- Recognize the difference between instructions and configuration
-
-**Content:**
-- CLAUDE.md is a markdown file at the project root that Claude Code reads at the **start of every session**
-- It provides **persistent instructions** about coding standards, architecture, and project conventions
-- It's complementary to auto memory (which Claude writes automatically)
-- CLAUDE.md helps with consistency, especially across teams
-
-**Key Distinction:**
-```
-CLAUDE.md (you write)          → Instructions, rules, standards, links
-Auto memory (Claude writes)    → Learnings, patterns, corrections, feedback
-```
-
-**Action:** Check if your project has a `CLAUDE.md` in the root directory. If not, note this as a task.
+1. [What is CLAUDE.md?](#what-is-claudemd)
+2. [Why You Need It](#why-you-need-it)
+3. [Official Best Practices](#official-best-practices)
+4. [File Structure & Organization](#file-structure--organization)
+5. [What to Include](#what-to-include)
+6. [What NOT to Include](#what-not-to-include)
+7. [Writing Effective CLAUDE.md](#writing-effective-claudemd)
+8. [Advanced Patterns](#advanced-patterns)
+9. [Common Mistakes](#common-mistakes)
+10. [Real-World Examples](#real-world-examples)
+11. [Tools & Commands](#tools--commands)
+12. [Checklist](#checklist)
 
 ---
 
-### 1.2 Why CLAUDE.md Matters (15 min)
+## What is CLAUDE.md?
 
-**Learning Objectives:**
-- Understand the problems CLAUDE.md solves
-- See examples of how it improves Claude's work quality
+**CLAUDE.md is a plain-text file that provides persistent instructions to Claude Code across all sessions.**
 
-**Real-World Problems it Solves:**
+Unlike conversation context, which expires when you close Claude Code, CLAUDE.md stays in your repository and is loaded automatically whenever you open a project. It acts as your project's "instruction manual" for Claude.
 
-1. **Consistency across sessions:**
-   - Without CLAUDE.md: Claude might use different naming conventions or architectural patterns in each session
-   - With CLAUDE.md: Standards are reinforced every time
+### Core Principle
 
-2. **Onboarding new developers (including Claude):**
-   - Communicates project conventions without relying on informal knowledge
-   - Makes decisions explicit
+> "Only write down what Claude can't find by reading the repo."
 
-3. **Preventing anti-patterns:**
-   - "Don't use X library" or "Always use Y pattern for Z"
-   - Communicates known gotchas and workarounds
-
-4. **Documentation as code:**
-   - Lives with the project, versioned in git
-   - Evolves with the codebase
-
-**Example Scenario:**
-```
-Without CLAUDE.md:
-  Session 1: Claude creates a component with one pattern
-  Session 2: Claude creates a component with a different pattern
-  Result: Inconsistent codebase
-
-With CLAUDE.md:
-  Session 1 & 2: Both follow the documented component pattern
-  Result: Consistent, maintainable code
-```
-
-**Action:** Write down one specific problem in your project that CLAUDE.md could solve.
+This single principle guides everything you put in CLAUDE.md. If Claude can discover it by reading the code, skip it.
 
 ---
 
-### 1.3 CLAUDE.md vs. AGENTS.md (10 min)
+## Why You Need It
 
-**Learning Objectives:**
-- Know when to use CLAUDE.md vs. AGENTS.md
-- Understand they're interchangeable for project instructions
+Claude Code starts with no memory of your project between sessions. Without CLAUDE.md, you'd need to re-explain:
 
-**Key Facts:**
-- If your project already has `AGENTS.md` (for other coding agents), Claude Code will read that instead of CLAUDE.md
-- They serve the same purpose for Claude Code
-- CLAUDE.md is recommended for Claude Code-specific projects
-- AGENTS.md is better if you're running multiple agent systems
+- How to build and test your project
+- Your code style conventions
+- Which directories are deprecated
+- Integration details hidden from the code
+- Gotchas you've already corrected twice
 
-**Action:** Check if your project has either file. Note which one exists (or if neither exists).
+**With CLAUDE.md**: Claude knows these things immediately, reducing friction and avoiding repeated mistakes.
 
 ---
 
-### 1.4 Anatomy of Your Current Project (10 min)
+## Official Best Practices
 
-**Learning Objectives:**
-- Understand what information you need to extract from your project to write CLAUDE.md
-- Learn the discovery process
+### Size Matters
 
-**Key Information to Gather:**
+- **Target**: Under 200 lines per file
+- **There is no hard 1000-line limit**, but longer files consume context and can reduce adherence.
+- **Strategy**: Keep the main guide concise; use imports or path-scoped rules in `.claude/rules/` for details.
 
-1. **Architecture overview** — data flow, module relationships
-2. **Build/test commands** — how to compile, run, test
-3. **Conventions** — naming, code style, patterns
-4. **Known gotchas** — edge cases, common mistakes, workarounds
-5. **Project structure** — where different types of code live
-6. **Dependencies** — libraries, tools, versions
-7. **Deployment/Usage** — how is this used in production or other projects?
+### Conciseness is Key
 
-**For Your Calculator Project, the Info Should Cover:**
-```
-- Parser: tokenization & AST building via recursive descent
-- Calculator: recursive evaluation of AST
-- CLI: REPL interface
-- Build: cmake with ctest for tests
-- Languages/Tools: C++, CMake, Google Test
+```markdown
+# ❌ TOO LONG (wastes context)
+The calculator library uses a recursive descent parser that processes
+tokens in left-to-right order. The Parser class contains methods for
+parsing expressions, terms, factors, and powers. Each method calls the
+next level in the operator precedence hierarchy...
+
+# ✅ CONCISE (actionable)
+**Parser precedence**: ^ > * / > + -
 ```
 
-**Action:** Create a bullet-list inventory of your project's core components and how they fit together. (This is the raw material for your CLAUDE.md.)
+### Actionable Over Descriptive
+
+```markdown
+# ❌ DESCRIPTIVE (you need to read the code anyway)
+We have a middleware system that handles request routing and validation.
+
+# ✅ ACTIONABLE (Claude can act on this)
+Middleware runs in order: auth → validation → route. Add new middleware
+to middlewares/ and register in config/middleware.ts
+```
 
 ---
 
-## Module 2: Structure & Organization (60 minutes)
+## File Structure & Organization
 
-### 2.1 The Four Sections of a Good CLAUDE.md (15 min)
+### Single Repository
 
-**Learning Objectives:**
-- Learn the canonical structure of CLAUDE.md files
-- Understand why each section matters
-- Know what goes in each section
-
-**Canonical Sections:**
-
-#### 1. **Overview**
-- One paragraph describing what the project is
-- Reference links to detailed docs (see ARCHITECTURE.md, BUILDING.md, etc.)
-- Quick facts: language, framework, team size
-
-#### 2. **Quick Start**
-- Fastest path to getting the project running
-- Build, run, and test commands
-- Prerequisites checklist
-
-#### 3. **Project Structure**
-- Directory tree with annotations
-- What each folder contains
-- Where different types of code live (tests, config, docs, etc.)
-
-#### 4. **Common Tasks** (or "Common Workflows")
-- Key tasks developers/Claude will face
-- Links to detailed docs for each task
-- One-liners or short commands where applicable
-
-**Optional Additional Sections:**
-- **Key Design Decisions** — why the project is structured this way
-- **Integration Notes** — how this project fits into a larger system
-- **Gotchas & Known Issues** — edge cases and workarounds (or link to GOTCHAS.md)
-
-**Example Structure from Your Calculator Project:**
 ```
-# CLAUDE.md
+your-project/
+├── CLAUDE.md                 # Main project instructions
+├── .claude/
+│   ├── settings.json         # Claude Code settings
+│   └── rules/
+│       ├── naming.md         # Naming conventions
+│       ├── testing.md        # Testing practices
+│       └── deployment.md     # Deployment procedures
+└── src/
+```
 
-## Overview
-Multi-file calculator library...
+### Monorepo Structure
+
+```
+monorepo/
+├── CLAUDE.md                 # Root instructions
+├── .claude/
+│   └── rules/
+│       ├── root.md           # Org-wide standards
+│       └── frontend.md       # Frontend-specific rules (scoped with paths frontmatter)
+├── src/
+│   ├── frontend/
+│   │   └── CLAUDE.md         # Frontend-specific overrides
+│   ├── backend/
+│   │   └── CLAUDE.md         # Backend-specific overrides
+│   └── shared/
+```
+
+### Personal Settings
+
+```
+~/.claude/
+├── CLAUDE.md                 # Your global defaults (all projects)
+└── settings.json
+
+your-project/
+└── CLAUDE.local.md           # Personal project-specific instructions
+```
+
+**Note**: Add `CLAUDE.local.md` to `.gitignore` for personal project-specific rules.
+
+---
+
+## What to Include
+
+### 1. Build & Test Commands (Essential)
+
+**Why**: Claude needs exact commands to verify work.
+
+````markdown
+## Building
+
+```bash
+mkdir -p build && cd build && cmake .. && cmake --build .
+```
+
+## Testing
+
+```bash
+cd build && ctest
+```
+
+## Running
+
+```bash
+./build/calc-cli
+```
+````
+
+### 2. Code Conventions (Essential)
+
+**Why**: Claude would otherwise re-discover these from reading code.
+
+```markdown
+## Naming Conventions
+
+- Functions: `camelCase` (e.g., `parseExpression()`)
+- Classes: `PascalCase` (e.g., `Parser`, `Calculator`)
+- Constants: `UPPER_SNAKE_CASE` (e.g., `MAX_TOKENS`)
+- Private members: Prefix with `_` (e.g., `_parseStatement()`)
+
+## File Organization
+
+- Headers: `include/projectname/*.h`
+- Implementation: `src/*.cpp`
+- Tests: `tests/*_test.cpp`
+```
+
+### 3. Gotchas & Non-Obvious Behavior (Essential)
+
+**Why**: These prevent Claude from making the same mistake twice.
+
+```markdown
+## Gotchas
+
+**Operator Precedence**: Power (^) binds right-to-left:
+- `2^3^2` = `2^(3^2)` = 512 ✓
+- NOT `(2^3)^2` = 64 ✗
+
+**Parser Depth**: Limited to 1000 tokens. Deeply nested expressions fail silently.
+
+**Deprecated**: `old_parser.cpp` was replaced by `new_parser.cpp` in v2.0.
+Do not reference the old file.
+```
+
+### 4. Integration & Deployment (When Hidden)
+
+**Why**: If it's not obvious from reading code, Claude needs to know it.
+
+```markdown
+## Deployment
+
+Production builds require:
+1. Set `CMAKE_BUILD_TYPE=Release`
+2. Run security scan: `./scripts/scan.sh`
+3. Generate SBOM: `./scripts/sbom.sh`
+4. Tag release in git before deploy
+
+Do not deploy from feature branches.
+```
+
+### 5. Related Documentation (Navigation)
+
+**Why**: Guides Claude to detailed information for complex topics.
+
+```markdown
+## See Also
+
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — System design, data flow
+- [`BUILDING.md`](BUILDING.md) — Build system details, CMake
+- [`CONVENTIONS.md`](CONVENTIONS.md) — Code style, error handling
+- [`GOTCHAS.md`](GOTCHAS.md) — Non-obvious behavior, edge cases
+```
+
+---
+
+## What NOT to Include
+
+### 1. ❌ Architecture Descriptions
+
+**Why**: Claude reads the code. Descriptions get stale.
+
+```markdown
+# WRONG
+The system uses the Model-View-Controller pattern. Models handle
+business logic, views render output, and controllers...
+
+# RIGHT
+Leave this for ARCHITECTURE.md or inline code comments.
+```
+
+### 2. ❌ Duplicate Code Information
+
+**Why**: Wastes context space and creates contradictions.
+
+```markdown
+# WRONG
+The Parser class has methods parseExpression(), parseTerm(), and parseFactor()
+which follow the operator precedence rules for addition, multiplication, and power...
+
+# RIGHT
+Just note: "Operator precedence: ^ > * / > + -"
+Claude can read the actual code.
+```
+
+### 3. ❌ Personal Workflow Details
+
+**Why**: Belongs in `CLAUDE.local.md` or your home `~/.claude/CLAUDE.md`.
+
+```markdown
+# WRONG (in shared repo)
+I prefer to run tests before committing. Always check linting first.
+
+# RIGHT (in personal settings)
+Save this in ~/.claude/CLAUDE.md or project/CLAUDE.local.md
+```
+
+### 4. ❌ Aspirational Rules
+
+**Why**: Claude will try to follow them anyway. Enforce with hooks instead.
+
+```markdown
+# WRONG (non-deterministic, will be ignored inconsistently)
+Always add unit tests for new functions.
+
+# RIGHT (deterministic enforcement)
+Use hooks or settings.json to run tests automatically before commits.
+```
+
+### 5. ❌ Large, Verbose Files
+
+**Why**: Context expensive, Claude's adherence drops above 200 lines.
+
+```markdown
+# WRONG
+[500 lines of detailed explanations]
+
+# RIGHT
+Keep main CLAUDE.md under 200 lines. Move detailed info to:
+- Supporting .md files (ARCHITECTURE.md, GOTCHAS.md)
+- Path-scoped rules in .claude/rules/
+```
+
+---
+
+## Writing Effective CLAUDE.md
+
+### Principle 1: Plain Language Over Jargon
+
+```markdown
+# ❌ JARGON
+Implement idempotent operations using transactional semantics with ACID compliance.
+
+# ✅ PLAIN LANGUAGE
+All database operations must complete fully or roll back completely. Never leave partial updates.
+```
+
+### Principle 2: Specific Over General
+
+```markdown
+# ❌ TOO GENERAL
+Write good code.
+
+# ✅ SPECIFIC
+Use 2-space indentation. Use `const` by default; `let` only for loop counters.
+```
+
+### Principle 3: Imperative Over Passive
+
+```markdown
+# ❌ PASSIVE
+Tests should be written for new code.
+
+# ✅ IMPERATIVE
+Write tests for all new functions. Place tests in tests/*_test.cpp alongside implementations.
+```
+
+### Principle 4: Link Instead of Explain
+
+```markdown
+# ❌ EXPLAIN EVERYTHING
+[200 lines about the build system, flags, configurations...]
+
+# ✅ LINK TO DETAIL
+Build: `cmake .. && cmake --build .`
+(See [`BUILDING.md`](BUILDING.md) for advanced options)
+```
+
+### Principle 5: Show Examples
+
+```markdown
+# ❌ NO EXAMPLES
+Naming follows conventions.
+
+# ✅ WITH EXAMPLES
+Naming: functions are `camelCase` (e.g., `calculateSum()`), classes are `PascalCase`
+(e.g., `Calculator`), constants are `UPPER_SNAKE_CASE` (e.g., `MAX_DEPTH`).
+```
+
+---
+
+## Advanced Patterns
+
+### Pattern 1: Path-Scoped Rules (Monorepos)
+
+Store rules in `.claude/rules/` with frontmatter for specific paths:
+
+**`.claude/rules/frontend.md`**
+```markdown
+---
+description: Frontend-specific conventions
+paths: ["src/frontend/**", "*.tsx", "*.css"]
+---
+
+# Frontend Conventions
+
+- Use Tailwind for styling
+- Components: PascalCase, one per file
+- Hooks: prefix with `use` (e.g., `useAuth`)
+```
+
+**`.claude/rules/backend.md`**
+```markdown
+---
+description: Backend-specific conventions
+paths: ["src/backend/**", "*.go", "*.proto"]
+---
+
+# Backend Conventions
+
+- Use dependency injection
+- Errors: wrap with context
+- Logging: structured JSON only
+```
+
+### Pattern 2: Modular Organization
+
+**Main CLAUDE.md** — Concise overview linking to modules:
+
+```markdown
+# Project Overview
+
+A calculator library with CLI interface.
+
+## Quick Reference
+
+- Build: `cmake .. && cmake --build .`
+- Test: `ctest`
+- Conventions: See [`CONVENTIONS.md`](CONVENTIONS.md)
+- Architecture: See [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- Gotchas: See [`GOTCHAS.md`](GOTCHAS.md)
+```
+
+Then create focused documents:
+- `ARCHITECTURE.md` — Data flow, design decisions
+- `BUILDING.md` — Build system, compilation
+- `CONVENTIONS.md` — Code style, error handling
+- `GOTCHAS.md` — Non-obvious behavior, edge cases
+
+### Pattern 3: Team-Local Split
+
+**Committed** (`CLAUDE.md`):
+```markdown
+# Build & Test Commands
+# Code Conventions
+# Gotchas & Non-Obvious Behavior
+# Integration Details
+```
+
+**Personal** (`CLAUDE.local.md` in `.gitignore`):
+```markdown
+# My Preferred Tools
+# My Local Build Setup
+# My Development Workflow
+```
+
+### Pattern 4: Enforcement vs. Guidance
+
+**Use CLAUDE.md for**: Context, conventions, gotchas (guidance)
+
+```markdown
+Prefer const over let.
+```
+
+**Use hooks for**: Deterministic enforcement (guaranteed execution)
+
+```json
+// settings.json
+{
+  "hooks": {
+    "pre-commit": ["npm run lint", "npm test"]
+  }
+}
+```
+
+---
+
+## Common Mistakes
+
+### Mistake 1: Everything in One File
+
+**❌ Bad**
+```markdown
+# CLAUDE.md (hundreds of lines of everything)
+[Architecture, conventions, build, deployment, gotchas, team policies...]
+```
+
+**✅ Good**
+```
+CLAUDE.md (150 lines, overview + links)
+ARCHITECTURE.md (technical design)
+BUILDING.md (build system)
+CONVENTIONS.md (code style)
+GOTCHAS.md (non-obvious behavior)
+.claude/rules/ (path-specific rules)
+```
+
+### Mistake 2: Duplicating Code Documentation
+
+**❌ Bad**
+```markdown
+The Parser class implements recursive descent parsing. It has methods
+for parsing expressions, terms, and factors that follow the precedence...
+```
+
+**✅ Good**
+```markdown
+**Operator precedence**: ^ > * / > + - (implemented in Parser)
+```
+
+### Mistake 3: Using ALL CAPS for Emphasis
+
+**❌ Bad**
+```markdown
+NEVER commit directly to main. ALWAYS create a feature branch.
+ALWAYS run tests before pushing.
+```
+
+**✅ Good**
+```markdown
+Do not commit directly to main—create a feature branch.
+Run tests before pushing: `npm test && npm run lint`.
+```
+
+### Mistake 4: Setting Contradictory Rules
+
+**❌ Bad**
+```markdown
+Prefer functional style with immutability.
+...later in file...
+Use imperative loops for performance.
+```
+
+**✅ Good**
+```markdown
+Prefer functional style with immutability, except in performance-critical
+sections (marked with PERF_CRITICAL comment).
+```
+
+### Mistake 5: Stale Documentation
+
+**❌ Bad**
+```markdown
+Uses the old Parser from v1.0 [Written in 2020, never updated]
+```
+
+**✅ Good**
+Audit documentation with `/doctor prompt-audit` to catch stale references.
+
+---
+
+## Real-World Examples
+
+### Example 1: Small Python Library
+
+**CLAUDE.md** (~80 lines)
+
+````markdown
+# Python ML Library
+
+Command-line tool for training and evaluating machine learning models.
 
 ## Quick Start
-Build, Run, Test commands
+
+Install:
+```bash
+pip install -e .
+```
+
+Train:
+```bash
+python -m ml_lib train --config config.yaml
+```
+
+Test:
+```bash
+pytest tests/ -v
+```
+
+## Conventions
+
+- Functions: `snake_case` (e.g., `train_model()`)
+- Classes: `PascalCase` (e.g., `ModelTrainer`)
+- Files: `snake_case.py`
+
+## Gotchas
+
+**GPU Memory**: Models default to GPU 0. Set `CUDA_VISIBLE_DEVICES=1` for GPU 1.
+
+**Config Format**: Must use YAML (not JSON). Invalid YAML silently uses defaults—see error log.
+
+**Deprecated**: `old_trainer.py` was replaced in v2.0. Do not use.
+
+## See Also
+
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — Model pipeline, data flow
+- [`TRAINING.md`](TRAINING.md) — Training parameters, hypertuning
+````
+
+### Example 2: Full-Stack Web App
+
+**CLAUDE.md** (~150 lines)
+
+````markdown
+# E-Commerce Platform
+
+SPA frontend (React) + Node.js backend + PostgreSQL database.
+
+## Development Setup
+
+Install:
+```bash
+npm install
+npm run setup:db
+```
+
+Dev server (port 3000):
+```bash
+npm run dev
+```
+
+Tests:
+```bash
+npm run test
+npm run test:e2e
+```
+
+Build (production):
+```bash
+npm run build
+```
+
+## Quick Reference
+
+| Task | Command |
+|------|---------|
+| Database migration | `npm run migrate` |
+| Seed test data | `npm run seed:test` |
+| Database console | `npm run db:shell` |
+| API docs | `http://localhost:3000/api/docs` |
 
 ## Project Structure
-src/, tests/, main.cpp, CMakeLists.txt
 
-## Common Tasks
-- Add a new operator → see GOTCHAS.md
-- Debug an AST → see GOTCHAS.md
+```
+frontend/          — React SPA
+backend/           — Express API
+database/          — SQL migrations
+shared/            — TypeScript types
 ```
 
-**Action:** Outline the structure you'll use for your CLAUDE.md. Decide on sections and what goes in each.
+## Conventions
 
----
+- **Frontend**: Functional components, React Hooks, named exports
+- **Backend**: MVC pattern, async/await, error middleware
+- **Database**: Migrations only (never edit schema.sql directly)
 
-### 2.2 Writing the Overview Section (15 min)
+## Gotchas
 
-**Learning Objectives:**
-- Craft a compelling project overview
-- Know what details belong here vs. deeper docs
+**CORS**: Preflight requests fail if `origin` header doesn't match config.
+See `backend/middleware/cors.js`.
 
-**Best Practices:**
+**Transactions**: Database routes don't auto-rollback on error. Use `await db.transaction()`.
 
-1. **Start with the "why":**
-   - What problem does this solve?
-   - Who uses it?
-   - What makes it different?
+**API Versioning**: `/api/v1/` is stable. `/api/v2/` is experimental—breaking changes OK.
 
-2. **Keep it brief:**
-   - 1-3 sentences maximum
-   - Leave the deep details for architecture docs
+## See Also
 
-3. **Include reference links:**
-   - Point to ARCHITECTURE.md, BUILDING.md, etc.
-   - Readers who need detail know where to go
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — System design, authentication flow
+- [`DEPLOYMENT.md`](DEPLOYMENT.md) — Production checklist
+- [`DATABASE.md`](DATABASE.md) — Schema, migrations
+````
 
-4. **Add quick facts:**
-   - Language, framework, key dependencies
-   - Target audience (backend, frontend, library users, etc.)
+### Example 3: C++ Project (from your learning directory)
 
-**Example (Good):**
-```markdown
+**CLAUDE.md** (~50 lines) ✅ Excellent example
+
+````markdown
 # CLAUDE.md
 
-## Overview
+Multi-file calculator library with CLI interface.
 
-A multi-file calculator library with CLI interface. Parses and evaluates
-mathematical expressions with support for +, -, *, /, ^ (power), and parentheses.
-
-**See also:**
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) — Data flow, module relationships, design decisions
-- [`BUILDING.md`](BUILDING.md) — Build commands, CMake setup, running tests
-- [`CONVENTIONS.md`](CONVENTIONS.md) — Code style, naming, error handling patterns
-```
-
-**Example (Not as Good):**
-```markdown
-## Overview
-
-This is a calculator that does math. It has a parser and a calculator and a CLI.
-It was made for learning. It uses C++. The parser builds an AST. The calculator
-evaluates it. The CLI is a REPL.
-```
-
-The first example is concise but comprehensive. The second is repetitive and buries the important links.
-
-**Action:** Write a 1-3 sentence overview of your project. Add reference links to any existing docs.
-
----
-
-### 2.3 Writing the Quick Start Section (15 min)
-
-**Learning Objectives:**
-- Create a fast path for getting the project running
-- Know the three essential pieces: build, run, test
-
-**Essential Components:**
-
-1. **Prerequisites:**
-   ```
-   - CMake 3.10+
-   - C++17 compiler
-   - Make or Ninja
-   ```
-
-2. **Build:**
-   ```bash
-   mkdir -p build && cd build && cmake .. && cmake --build .
-   ```
-
-3. **Run:**
-   ```bash
-   ./calc-cli
-   ```
-
-4. **Test:**
-   ```bash
-   ctest
-   ```
-
-**Best Practices:**
-
-- Make commands **copy-paste ready** — no hidden steps
-- Group related commands (don't split build and run into separate sections)
-- Assume zero prior knowledge of your toolchain
-- If there are gotchas (e.g., "Windows users need Git for Bash"), call them out
-
-**Example:**
-````markdown
 ## Quick Start
 
 Build:
@@ -298,517 +666,173 @@ Test:
 ctest
 ```
 
-For more details, see [`BUILDING.md`](BUILDING.md).
-````
-
-**Action:** Write the Quick Start section for your project. Test that the commands work as written.
-
----
-
-### 2.4 Writing the Project Structure Section (15 min)
-
-**Learning Objectives:**
-- Map out the directory tree with meaningful annotations
-- Help readers find code quickly
-- Establish conventions by showing where things go
-
-**Best Practice Structure:**
-
-````markdown
 ## Project Structure
 
 ```
 src/            — Core library (Parser, Calculator, CLI)
 tests/          — Google Test unit tests
-main.cpp        — Entry point
 CMakeLists.txt  — Build configuration
-ARCHITECTURE.md — Detailed design docs
 ```
 
-**Directory conventions:**
-- `src/`: All source code, organized by module
-- `tests/`: Mirrors src/ structure; one test file per module
-- Root: Build config and documentation only
-````
+## Conventions
 
-**What to Include:**
-- Top-level directories only (don't list every file)
-- One-line description of what each folder is for
-- Call out important files (entry points, config, key modules)
-- Describe naming conventions (e.g., "test files are src.test.cpp")
-
-**What to Omit:**
-- Third-party libraries (unless they're critical)
-- Build artifacts or compiled output
-- Temporary directories (.gitignore'd files)
-
-**Action:** Create a directory tree for your project. Add brief descriptions. Aim for clarity, not completeness.
-
----
-
-## Module 3: Best Practices & Content Patterns (60 minutes)
-
-### 3.1 Writing "Common Tasks" Section (15 min)
-
-**Learning Objectives:**
-- Document workflows developers will need to repeat
-- Link to detailed docs instead of duplicating information
-- Make CLAUDE.md a navigation hub, not a manual
-
-**Pattern: Task + Link**
-
-```markdown
-## Common Tasks
-
-- **Add a new operator** → See [`GOTCHAS.md#add-operator`](GOTCHAS.md#add-operator)
-- **Debug an AST** → See [`GOTCHAS.md#debug-ast`](GOTCHAS.md#debug-ast)
-- **Use the library in another project** → See [`ARCHITECTURE.md#deployment`](ARCHITECTURE.md#deployment)
-```
-
-**Why This Works:**
-- CLAUDE.md stays concise (loaded at session start)
-- Detailed docs stay in their proper files
-- Links are discoverable and tracked in git
-- Claude can jump directly to the right doc
-
-**Anti-Pattern:**
-```markdown
-## How to Add an Operator
-
-1. Open src/calculator.h
-2. Find the evaluate() function
-3. Add a case for the new operator in the switch statement
-4. Also update src/parser.cpp to tokenize it
-...
-```
-
-(This duplicates information that belongs in GOTCHAS.md or BUILDING.md.)
-
-**Action:** List 3-5 common tasks in your project. Create links to docs (create placeholder docs if needed).
-
----
-
-### 3.2 Key Design Decisions Section (Optional but Valuable) (15 min)
-
-**Learning Objectives:**
-- Capture the "why" behind architectural choices
-- Help future developers (including Claude) make consistent decisions
-- Prevent repeated questioning of settled decisions
-
-**Why Include This:**
-
-- Prevents Claude from "improving" an intentional design choice
-- Helps new team members understand the philosophy
-- Becomes invaluable when onboarding new developers
-
-**Pattern: Decision + Rationale**
-
-```markdown
-## Key Design Decisions
-
-**Why separate Parser and Calculator?**
-- Parser builds the AST, which is a separate concern from evaluation
-- Allows for future features like symbolic manipulation, optimization, or printing the AST
-- Testable independently
-
-**Why recursive descent parsing?**
-- Easy to understand and implement
-- Operator precedence is naturally encoded in the recursion depth
-- No need for a separate precedence table
-
-**Why AST instead of direct evaluation?**
-- More flexible — can inspect, transform, or reuse the AST
-- Clearer separation of concerns
-```
-
-**Good Characteristics:**
-- Short (1-3 sentences per decision)
-- Emphasize constraints, not just preference
-- Include both benefits and tradeoffs when relevant
-
-**Action:** Identify 2-3 key design decisions in your project. Write one sentence for each explaining the rationale.
-
----
-
-### 3.3 Linking to Supplementary Docs (15 min)
-
-**Learning Objectives:**
-- Organize project documentation hierarchically
-- Know what belongs in CLAUDE.md vs. deeper docs
-- Create a sustainable documentation structure
-
-**Documentation Hierarchy:**
-
-| File | Purpose | Audience |
-|------|---------|----------|
-| **CLAUDE.md** | Navigation hub, quick start, overview | Everyone (Claude + humans) |
-| **ARCHITECTURE.md** | Data flow, module relationships, design | Developers and code reviewers |
-| **BUILDING.md** | Build system, test commands, CI setup | Contributors and CI maintainers |
-| **CONVENTIONS.md** | Code style, naming, patterns | Code reviewers |
-| **GOTCHAS.md** | Edge cases, common mistakes, workarounds | Developers debugging issues |
-
-**Linking Strategy:**
-
-1. **CLAUDE.md lists the files and their purpose** (see your Overview section with "See also" links)
-2. **Each section links to the relevant deeper doc**
-
-Example:
-```markdown
-## Quick Start
-
-For detailed build configuration, see [`BUILDING.md`](BUILDING.md).
+- Headers: `include/calc/*.h`
+- Implementation: `src/*.cpp`
+- Tests: `tests/*_test.cpp`
+- Classes: `PascalCase` (Parser, Calculator)
+- Functions: `camelCase` (parseExpression)
 
 ## Common Tasks
 
-- **Add a new operator** → See [`GOTCHAS.md`](GOTCHAS.md)
-```
-
-**What If You Don't Have These Files Yet?**
-- Start with CLAUDE.md (you're here)
-- Add ARCHITECTURE.md next (document the current design)
-- Add BUILDING.md for build-specific details
-- Add CONVENTIONS.md as style questions come up
-- Add GOTCHAS.md when you learn tricky edge cases
-
-**Action:** Map out which supplementary docs your project needs. Create placeholder files (even just a header) so you can link to them.
-
----
-
-### 3.4 What NOT to Put in CLAUDE.md (15 min)
-
-**Learning Objectives:**
-- Keep CLAUDE.md concise and focused
-- Recognize what belongs elsewhere
-- Avoid information decay and duplication
-
-**Don't Include:**
-
-1. **Code examples longer than 3-4 lines** → Belongs in ARCHITECTURE.md or code comments
-2. **Implementation details** → Belongs in source code documentation or ARCHITECTURE.md
-3. **Detailed API documentation** → Belongs in header comments or a generated API doc
-4. **Team contact info or Slack channels** → Belongs in a team wiki or README
-5. **Historical decisions** → Belongs in git commits or ADRs (Architecture Decision Records)
-6. **Duplicate info from other docs** → Link instead of repeating
-
-**Example of What to Avoid:**
-
-````markdown
-# Don't do this:
-
-## Adding an Operator
-
-The parser has a tokenize() function that looks like this:
-```cpp
-void Parser::tokenize(const std::string& input) {
-    for (char c : input) {
-        if (c == '+') tokens.push_back({TokenType::PLUS, "+"});
-        else if (c == '-') tokens.push_back({TokenType::MINUS, "-"});
-        // ... many more lines ...
-    }
-}
-```
-
-Then you need to update the evaluate() function in calculator.cpp:
-```cpp
-double Calculator::evaluate(ASTNode* node) {
-    if (node->op == '+') return left + right;
-    else if (node->op == '-') return left - right;
-    // ... many more lines ...
-}
-```
-
-# Do this instead:
-
-- **Add a new operator** → See [`GOTCHAS.md#add-operator`](GOTCHAS.md#add-operator)
+- **Add a new operator** → See `GOTCHAS.md#add-operator`
+- **Debug an AST** → See `GOTCHAS.md#debug-ast`
+- **Use as library** → See `ARCHITECTURE.md#deployment`
 ````
 
-The link keeps CLAUDE.md lightweight; detailed implementation belongs in GOTCHAS.md.
-
-**Action:** Review what you've written so far. Remove anything that could be moved to a more specialized doc and replaced with a link.
-
----
-
-## Module 4: Advanced Topics (45 minutes)
-
-### 4.1 CLAUDE.md for Team Projects (15 min)
-
-**Learning Objectives:**
-- Adapt CLAUDE.md for team contexts
-- Make it a source of truth for code standards
-- Reduce review friction
-
-**Extra Sections for Teams:**
-
-```markdown
-## Code Review Checklist
-
-Before submitting a PR, ensure:
-- [ ] Follows naming conventions (see CONVENTIONS.md)
-- [ ] All operators handled in both Parser and Calculator
-- [ ] New functions have inline documentation
-- [ ] Tests added for new functionality
-- [ ] No division by zero without error handling
-
-## Common Review Comments
-
-If you see "precedence", read GOTCHAS.md#operator-precedence
-If you see "memory leak", ensure deleteAST() is called
-If you see "inconsistent naming", see CONVENTIONS.md
-```
-
-**Team Communication Patterns:**
-
-- **New joiners:** CLAUDE.md is the first stop, not a deep dive
-- **Distributed teams:** Documents reduce async communication overhead
-- **CI/CD:** Reference CLAUDE.md in pre-commit hooks or linting rules
-- **Onboarding:** Point interns or new developers to CLAUDE.md first
-
-**Action:** If you're working in a team, draft a "Code Review Checklist" section for your CLAUDE.md.
+This example is excellent because it:
+- Is concise (~50 lines)
+- Provides exact build commands
+- Links to detailed docs instead of explaining
+- Focuses on gotchas, not architecture
 
 ---
 
-### 4.2 Keeping CLAUDE.md Fresh (15 min)
+## Tools & Commands
 
-**Learning Objectives:**
-- Establish practices for maintaining CLAUDE.md
-- Know when to update it
-- Prevent documentation rot
+### Creating CLAUDE.md
 
-**Update Triggers:**
+**Auto-generate** from your codebase:
 
-| Event | Action |
-|-------|--------|
-| Architectural change | Update ARCHITECTURE.md, link from CLAUDE.md if needed |
-| New convention adopted | Add to CONVENTIONS.md and reference from CLAUDE.md |
-| Build system changes | Update BUILDING.md and Quick Start section |
-| New gotcha discovered | Add to GOTCHAS.md |
-| Project structure changes | Update Project Structure section |
-
-**Best Practices:**
-
-1. **Version-control CLAUDE.md** — review it like code
-2. **Update alongside code changes** — if you change architecture, update the docs
-3. **Use PR descriptions to suggest doc updates** — reviewers can catch stale docs
-4. **Assign ownership** — someone on the team "owns" documentation
-5. **Annual review** — once a year, skim all docs and remove outdated info
-
-**Anti-Pattern:**
-```
-Year 1: CLAUDE.md is great, everyone uses it
-Year 2: Architecture changes, CLAUDE.md not updated
-Year 3: CLAUDE.md is outdated, nobody trusts it
-Year 4: Documentation is completely ignored
+```bash
+/init
 ```
 
-**Action:** Set a reminder to review your CLAUDE.md every quarter. Note one thing that's likely to go out of date soon.
+Claude Code analyzes your project and generates a starting CLAUDE.md.
+
+### Auditing CLAUDE.md
+
+**Check for contradictions and stale information**:
+
+```bash
+/doctor prompt-audit
+```
+
+Identifies:
+- Stale references to deleted files
+- Contradictory rules
+- Commands that no longer work
+
+### Viewing Memory
+
+**See all remembered context**:
+
+```bash
+/memory
+```
+
+Shows CLAUDE.md and any path-scoped rules loaded from `.claude/rules/`.
+
+### Confirming Load
+
+**Verify CLAUDE.md was loaded**:
+
+```bash
+/context all
+```
+
+Shows exactly what instructions Claude has loaded.
 
 ---
 
-### 4.3 Linking Auto Memory in CLAUDE.md (15 min)
+## Checklist
 
-**Learning Objectives:**
-- Understand how CLAUDE.md and auto memory work together
-- Reference auto memory learnings in your static docs
-- Create a cohesive knowledge system
+When writing or updating CLAUDE.md, verify:
 
-**How They Work Together:**
+### Content
 
-```
-CLAUDE.md (static, you write)        → Set expectations, rules, conventions
-Auto memory (dynamic, Claude writes) → Record learnings, corrections, feedback
-```
+- [ ] Under 200 lines (or split into modules)
+- [ ] Includes exact build commands
+- [ ] Includes exact test commands
+- [ ] Documents code conventions (naming, structure)
+- [ ] Includes gotchas that prevent common mistakes
+- [ ] Links to detailed docs instead of explaining everything
+- [ ] No duplicate code documentation
+- [ ] No stale file references
 
-**Example Workflow:**
+### Structure
 
-1. You write in CLAUDE.md: "Always use delete pattern X for memory cleanup"
-2. Claude follows it, but finds a gotcha
-3. Claude writes to auto memory: "Pattern X fails with circular references—use pattern Y instead"
-4. Next session, both CLAUDE.md and auto memory context are loaded
-5. You see the memory entry and update CLAUDE.md: "Use pattern Y for circular references"
+- [ ] Has Overview or Quick Start section
+- [ ] Has Project Structure section
+- [ ] Links to supporting docs (ARCHITECTURE.md, GOTCHAS.md, etc.)
+- [ ] Organized with clear headers
+- [ ] Uses code blocks for commands and examples
 
-**When to Reference Auto Memory in CLAUDE.md:**
+### Quality
 
-Rarely! CLAUDE.md is static. But you can add:
-```markdown
-## Troubleshooting
+- [ ] Plain language (no jargon)
+- [ ] Specific (not generic)
+- [ ] Actionable (Claude can act on it)
+- [ ] Consistent with project reality
+- [ ] No contradictions with other docs
 
-See auto memory (stored in `/home/user/.claude/projects/...`) for recent debugging
-sessions and edge cases discovered during development.
-```
+### Team
 
-**Action:** No action needed yet. This will become relevant once you've worked with your project for a few sessions.
-
----
-
-## Module 5: Practical Exercise (90 minutes)
-
-### 5.1 Create Your Own CLAUDE.md (60 min)
-
-**Task:** Write a complete CLAUDE.md for your calculator project (or your own project).
-
-**Sections to Include:**
-
-1. ✅ **Overview** (3 sentences max, with "See also" links)
-2. ✅ **Quick Start** (build, run, test commands)
-3. ✅ **Project Structure** (directory tree with descriptions)
-4. ✅ **Common Tasks** (3-5 tasks with links to relevant docs)
-5. ⭐ **Key Design Decisions** (optional, but valuable)
-
-**Checklist Before Submitting:**
-
-- [ ] All code blocks are tested and copy-paste ready
-- [ ] All links are valid (or linked docs are created)
-- [ ] No duplicate information (link instead of repeating)
-- [ ] Tone is consistent throughout
-- [ ] No more than 100 lines total
-- [ ] A new developer could follow "Quick Start" blindfolded
-
-**Time Breakdown:**
-- Section 1 (Overview): 10 min
-- Section 2 (Quick Start): 15 min
-- Section 3 (Project Structure): 10 min
-- Section 4 (Common Tasks): 15 min
-- Section 5 (Design Decisions): 10 min
+- [ ] Shared conventions are documented
+- [ ] Personal settings in `~/.claude/CLAUDE.md` or `CLAUDE.local.md`
+- [ ] `CLAUDE.local.md` is in `.gitignore`
+- [ ] Monorepos use path-scoped rules
 
 ---
 
-### 5.2 Create Supplementary Docs (20 min)
+## Summary
 
-**Task:** Create placeholder files for docs referenced in your CLAUDE.md.
+**CLAUDE.md is your project's instruction manual for Claude Code.**
 
-**Files to Create:**
+The key principle: *Only write down what Claude can't find by reading the repo.*
 
+### Three Essential Sections
+
+1. **Build & Test**: Exact commands to verify work
+2. **Conventions**: Naming, structure, patterns
+3. **Gotchas**: Non-obvious behavior that prevents mistakes
+
+### Three Golden Rules
+
+1. **Keep it concise** — Target under 200 lines
+2. **Link to detail** — Use ARCHITECTURE.md, GOTCHAS.md, etc. for complex info
+3. **Make it actionable** — Focus on what Claude should do, not what the system does
+
+### Advanced Organization
+
+- Use `.claude/rules/` for path-scoped rules in monorepos
+- Split large guides into focused documents
+- Use personal `CLAUDE.local.md` for workflow preferences
+- Audit regularly with `/doctor prompt-audit`
+
+### Start Now
+
+```bash
+# Generate starter CLAUDE.md
+/init
+
+# Audit for issues
+/doctor prompt-audit
+
+# Verify it's loaded
+/context all
 ```
-ARCHITECTURE.md    — Data flow, module structure, deployment (can be expanded later)
-BUILDING.md        — Build details, test commands, CI setup (can be expanded later)
-CONVENTIONS.md     — Code style, naming, patterns (can be expanded later)
-GOTCHAS.md        — Edge cases, common mistakes, workarounds (can be expanded later)
-```
 
-**Minimal Template for Each:**
-
-```markdown
-# ARCHITECTURE.md
-
-## Data Flow
-
-[Brief description]
-
-## Module Structure
-
-[Modules and their relationships]
-
-## Key Design Decisions
-
-[Why the project is structured this way]
-```
-
-(You can expand these later as needed.)
+You now have the knowledge to create effective CLAUDE.md files that maximize Claude Code's productivity in your projects.
 
 ---
 
-### 5.3 Peer Review (10 min)
+## Appendix: External Resources
 
-**If Working in a Team:**
-
-1. Share your CLAUDE.md with a colleague
-2. Ask them: "Can you follow the Quick Start commands without help?"
-3. Ask them: "Does the Project Structure make sense?"
-4. Note their feedback
-
-**If Solo:**
-
-1. Wait a day
-2. Read your CLAUDE.md with fresh eyes
-3. Ask yourself: "Would I understand this if I hadn't written it?"
-4. Make improvements
+- **Official Claude Code Docs**: https://code.claude.com/docs
+- **Claude API Reference**: https://claude.ai/docs
+- **GitHub Issue Tracker**: https://github.com/anthropics/claude-code/issues
+- **Community Examples**: Search GitHub for `CLAUDE.md` in top repositories
 
 ---
 
-## Module 6: Deep Dives (Optional, Reference Only)
-
-### 6.1 Using `.claude/rules/` for File-Specific Rules
-
-**Advanced Feature:** Scope CLAUDE.md rules to specific file types.
-
-```
-.claude/rules/
-├── cpp.md      — Rules for .cpp and .h files
-├── test.md     — Rules for test files
-└── cmake.md    — Rules for CMakeLists.txt
-```
-
-**Example `.claude/rules/cpp.md`:**
-```markdown
-## C++ Convention
-
-- Use `const` by default, `mutable` only when necessary
-- Prefer stack allocation over heap allocation
-- All functions have a comment describing their contract
-```
-
-(This is advanced; focus on CLAUDE.md first.)
-
----
-
-### 6.2 CLAUDE.md in Multi-Project Repos
-
-**Monorepo Pattern:** Each project has its own CLAUDE.md.
-
-```
-repo/
-├── CLAUDE.md                  — Root-level project info
-├── services/
-│   ├── auth-service/
-│   │   └── CLAUDE.md         — Auth service specific
-│   ├── api-service/
-│   │   └── CLAUDE.md         — API service specific
-```
-
-Claude Code finds the nearest CLAUDE.md when you cd into a folder.
-
----
-
-## Assessment
-
-By the end of this lesson plan, you should be able to:
-
-- [ ] Explain what CLAUDE.md is and why it matters
-- [ ] Identify the five core sections of a good CLAUDE.md
-- [ ] Write an effective overview and quick start
-- [ ] Create a directory structure document
-- [ ] Link to supplementary docs instead of duplicating info
-- [ ] Maintain CLAUDE.md as the project evolves
-- [ ] Recognize what doesn't belong in CLAUDE.md
-
----
-
-## Resources
-
-**Official Claude Code Documentation:**
-- [Claude Code Memory System](https://code.claude.com/docs/en/memory)
-- [Claude Code Best Practices](https://code.claude.com/docs/en/best-practices.md)
-- [Claude Code Common Workflows](https://code.claude.com/docs/en/common-workflows.md)
-
-**Related Topics (Further Learning):**
-- [Auto Memory](https://code.claude.com/docs/en/memory.md#auto-memory) — How Claude learns from your corrections
-- [Hooks](https://code.claude.com/docs/en/hooks.md) — Automate tasks before/after Claude actions
-- [Skills](https://code.claude.com/docs/en/skills.md) — Package repeatable workflows
-- [MCP (Model Context Protocol)](https://code.claude.com/docs/en/mcp.md) — Connect external tools and data sources
-
-**Free Courses:**
-- [Claude Academy - Claude Code 101](https://academy.claude.com/courses/claude-code-101)
-- [Claude Academy - Claude Code in Action](https://academy.claude.com/courses/claude-code-in-action)
-
----
-
-## Next Steps
-
-1. **Immediate:** Complete Module 5.1 and write your CLAUDE.md
-2. **This week:** Share with your team or a colleague for feedback
-3. **This month:** Create the supplementary docs (ARCHITECTURE.md, etc.)
-4. **Ongoing:** Update CLAUDE.md as your project evolves
-
----
-
-**Good luck, and happy documenting!** 🚀
+**Happy coding with Claude! 🚀**
