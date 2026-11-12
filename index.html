@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#faf9f6">
+    <meta name="description" content="A quiet, personal space for learning in public.">
+    <title>My Learning Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github.min.css" id="highlight-theme">
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.6/purify.min.js"></script>
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="My Learning Garden home">
+        <span class="wordmark-mark" aria-hidden="true">g.</span>
+        <span>learning garden</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#topics">Topics</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#resources">Resources</a>
+      </nav>
+      <div class="header-tools">
+        <label class="search-box">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+            <circle cx="8.8" cy="8.8" r="5.8" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="m13.2 13.2 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+          <input id="search-input" type="search" placeholder="Search notes..." autocomplete="off" aria-label="Search notes">
+          <kbd>/</kbd>
+        </label>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch color theme">
+          <svg class="sun-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="3.25" stroke="currentColor" stroke-width="1.4"></circle>
+            <path d="M10 1.8v1.7m0 13v1.7m8.2-8.2h-1.7m-13 0H1.8m14-5.8-1.2 1.2m-9.2 9.2-1.2 1.2m11.6 0-1.2-1.2m-9.2-9.2L4.2 4.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
+          </svg>
+          <svg class="moon-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none">
+            <path d="M16.8 12.2A7.2 7.2 0 0 1 7.8 3.2a7.3 7.3 0 1 0 9 9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> A space to think out loud</p>
+        <h1 id="page-title">My Learning Garden<span>.</span></h1>
+        <p class="hero-copy">Notes from the things I’m learning, making, and figuring out along the way.</p>
+        <div class="learning-status">
+          <span class="status-pulse" aria-hidden="true"></span>
+          <span class="status-label">Currently learning</span>
+          <span class="status-divider" aria-hidden="true"></span>
+          <span class="status-value">The art of starting</span>
+        </div>
+      </section>
+
+      <section class="library-section" id="topics" aria-labelledby="library-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">THE LIBRARY</p>
+            <h2 id="library-title">Notes &amp; explorations</h2>
+          </div>
+          <p class="library-count" id="library-count" aria-live="polite"></p>
+        </div>
+        <div class="filter-row">
+          <div class="filters" role="group" aria-label="Filter notes by topic">
+            <button class="filter-chip is-active" type="button" data-filter="All" aria-pressed="true">All</button>
+            <button class="filter-chip" type="button" data-filter="Programming" aria-pressed="false">Programming</button>
+            <button class="filter-chip" type="button" data-filter="Design" aria-pressed="false">Design</button>
+            <button class="filter-chip" type="button" data-filter="Systems" aria-pressed="false">Systems</button>
+            <button class="filter-chip" type="button" data-filter="Notes" aria-pressed="false">Notes</button>
+          </div>
+          <span class="sort-label">GROWING AT ITS OWN PACE</span>
+        </div>
+        <div class="module-grid" id="module-grid" aria-live="polite">
+          <article class="module-card skeleton" aria-hidden="true"><div class="skeleton-line short"></div><div class="skeleton-line title"></div><div class="skeleton-line"></div><div class="skeleton-line medium"></div></article>
+          <article class="module-card skeleton" aria-hidden="true"><div class="skeleton-line short"></div><div class="skeleton-line title"></div><div class="skeleton-line"></div><div class="skeleton-line medium"></div></article>
+          <article class="module-card skeleton" aria-hidden="true"><div class="skeleton-line short"></div><div class="skeleton-line title"></div><div class="skeleton-line"></div><div class="skeleton-line medium"></div></article>
+        </div>
+      </section>
+
+      <section class="lower-section" id="roadmap" aria-labelledby="roadmap-title">
+        <div class="lower-icon" aria-hidden="true">↗</div>
+        <div>
+          <p class="eyebrow">THE WAY FORWARD</p>
+          <h2 id="roadmap-title">A garden, not a checklist.</h2>
+          <p>There’s no finish line here. Add a note when something catches your curiosity, and let connections grow over time.</p>
+        </div>
+      </section>
+      <section class="resources-section" id="resources" aria-labelledby="resources-title">
+        <div>
+          <p class="eyebrow">MAKE IT YOURS</p>
+          <h2 id="resources-title">Plant a new idea</h2>
+        </div>
+        <p>Write a Markdown file, add its details to <code>manifest.json</code>, and publish. Your next note will appear here automatically.</p>
+        <a class="text-link" href="./README.md">Read the setup guide <span aria-hidden="true">→</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="wordmark footer-wordmark" href="#top"><span class="wordmark-mark" aria-hidden="true">g.</span><span>learning garden</span></a>
+      <span>A little progress, often.</span>
+      <span class="footer-year">MADE FOR THE LONG WAY</span>
+    </footer>
+
+    <dialog class="reader-dialog" id="reader-dialog" aria-labelledby="reader-title">
+      <div class="reader-shell">
+        <div class="reader-topbar">
+          <span class="reader-breadcrumb"><span class="wordmark-mark" aria-hidden="true">g.</span> <span id="reader-category">NOTE</span></span>
+          <button class="icon-button" id="close-reader" type="button" aria-label="Close note">
+            <svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+          </button>
+        </div>
+        <div class="reader-content" id="reader-content">
+          <p class="reader-date" id="reader-date"></p>
+          <h1 id="reader-title"></h1>
+          <div class="reader-body" id="reader-body"></div>
+        </div>
+      </div>
+    </dialog>
+  </body>
+</html>
