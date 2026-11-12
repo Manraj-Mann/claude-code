@@ -1,6 +1,6 @@
-# My Learning Garden
+# Learning Garden
 
-A calm, Markdown-driven learning hub built with plain HTML, CSS, and vanilla JavaScript. There is no build step or package manager: publish the files as-is with GitHub Pages.
+A Markdown-driven developer knowledge base with a dark, grid-lined console aesthetic and a growing-knowledge motif, built in plain HTML, CSS, and vanilla JavaScript. There is no build step or package manager: publish the files as-is with GitHub Pages.
 
 ## Run locally
 
@@ -12,9 +12,9 @@ python3 -m http.server 8000
 
 Then visit <http://localhost:8000>.
 
-## Add a learning module
+## Add a learning note
 
-1. Create a Markdown file inside `notes/`, such as `notes/03-css-layout.md`. Use standard Markdown headings, lists, links, and fenced code blocks. Add a language after the opening fence for highlighted code, for example ```` ```js ````.
+1. Create a Markdown file inside `notes/`, such as `notes/02-css-layout.md`. Use standard Markdown headings, lists, links, and fenced code blocks. Add a language after the opening fence for highlighted code, for example ```` ```js ````.
 2. Add an object to the array in `manifest.json`:
 
    ````json
@@ -24,11 +24,11 @@ Then visit <http://localhost:8000>.
      "status": "Draft",
      "date": "2026-11-12",
      "summary": "A short, one- or two-sentence preview of the note.",
-     "file": "notes/03-css-layout.md"
+     "file": "notes/02-css-layout.md"
    }
    ````
 
-   Keep the JSON valid: separate objects with commas, but do not add a comma after the last object. Categories can be `Programming`, `Design`, `Systems`, or `Notes`. Use `Draft`, `In Progress`, or `Completed` for status.
+   Keep the JSON valid: separate objects with commas, but do not add a comma after the last object. A category is a short topic label; add a matching filter chip in `index.html` if you want visitors to filter by it. Use a concise status such as `Draft`, `In Progress`, or `Completed`.
 3. Commit and push both files. The new card is loaded from the manifest automatically.
 
 ## Publish with GitHub Pages
@@ -46,3 +46,5 @@ All site and note URLs are relative, so this also works when published at a repo
 - Markdown reader dialog with syntax-highlighted fenced code and per-block copy buttons.
 - Light/dark theme preference saved in `localStorage`.
 - Marked, DOMPurify, Highlight.js, and web fonts loaded from CDNs.
+
+The featured note, **Writing a thoughtful CLAUDE.md**, is in `notes/claude-md-field-guide.md`.

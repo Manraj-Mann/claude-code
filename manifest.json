@@ -1,18 +1,10 @@
 [
   {
-    "title": "Welcome to the garden",
-    "category": "Notes",
-    "status": "In Progress",
+    "title": "Writing a thoughtful CLAUDE.md",
+    "category": "Documentation",
+    "status": "Ready to grow",
     "date": "2026-11-12",
-    "summary": "A small introduction to this learning space, and a few thoughts on learning in public.",
-    "file": "notes/01-welcome.md"
-  },
-  {
-    "title": "A tiny code notebook",
-    "category": "Programming",
-    "status": "Draft",
-    "date": "2026-11-12",
-    "summary": "A place for code worth remembering: small examples, useful patterns, and questions to revisit.",
-    "file": "notes/02-sample-code.md"
+    "summary": "A six-module field guide to project architecture, build commands, conventions, and durable context for Claude Code.",
+    "file": "notes/claude-md-field-guide.md"
   }
 ]

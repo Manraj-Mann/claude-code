@@ -18,7 +18,7 @@ function setTheme(theme) {
   const isDark = theme === "dark";
   document.documentElement.dataset.theme = isDark ? "dark" : "light";
   document.querySelector("#theme-toggle").setAttribute("aria-label", `Switch to ${isDark ? "light" : "dark"} mode`);
-  document.querySelector('meta[name="theme-color"]').content = isDark ? "#121212" : "#faf9f6";
+  document.querySelector('meta[name="theme-color"]').content = isDark ? "#0b1115" : "#f2f6f1";
   themeLink.href = isDark
     ? "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css"
     : "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github.min.css";
@@ -27,16 +27,16 @@ function setTheme(theme) {
 function initTheme() {
   let savedTheme;
   try {
-    savedTheme = localStorage.getItem("learning-garden-theme");
+    savedTheme = localStorage.getItem("learning-garden-theme-v2");
   } catch (error) {
     console.warn("Could not read the saved theme preference.", error);
   }
-  setTheme(savedTheme === "dark" ? "dark" : "light");
+  setTheme(savedTheme === "light" ? "light" : "dark");
 }
 
 function saveTheme(theme) {
   try {
-    localStorage.setItem("learning-garden-theme", theme);
+    localStorage.setItem("learning-garden-theme-v2", theme);
   } catch (error) {
     console.warn("Could not save the theme preference.", error);
   }
@@ -49,10 +49,11 @@ function dateLabel(date) {
   return new Intl.DateTimeFormat(undefined, { year: "numeric", month: "short", day: "numeric" }).format(parsed);
 }
 
-function renderCard(module) {
+function renderCard(module, index) {
   const button = document.createElement("button");
   button.className = "module-card";
   button.type = "button";
+  button.style.setProperty("--card-index", index);
   button.setAttribute("aria-label", `Read ${module.title}`);
 
   const top = document.createElement("div");
@@ -123,7 +124,7 @@ function visibleModules() {
 function renderModules() {
   const shown = visibleModules();
   grid.replaceChildren();
-  shown.forEach((module) => grid.append(renderCard(module)));
+  shown.forEach((module, index) => grid.append(renderCard(module, index)));
   if (shown.length === 0) {
     const empty = document.createElement("p");
     empty.className = "empty-state";
