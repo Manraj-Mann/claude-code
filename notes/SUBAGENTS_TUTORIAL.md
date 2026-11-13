@@ -2,8 +2,11 @@
 
 This tutorial uses **one running example** — a subagent for the calculator
 project you're sitting in right now (`src/`, `tests/`, built with CMake,
-documented in `CONVENTIONS.md`, `GOTCHAS.md`, `ARCHITECTURE.md`). You'll
-create that subagent in Part 1, then keep editing the *same file* as you move
+documented in `CONVENTIONS.md`, `GOTCHAS.md`, `ARCHITECTURE.md`). The
+project files for this tutorial are packaged in
+[../Tutorial-Files/tut-2-claude-subagents.zip](../Tutorial-Files/tut-2-claude-subagents.zip)
+so you can open the sample code and subagent config directly. You'll create
+that subagent in Part 1, then keep editing the *same file* as you move
 through Parts 2–4, picking up one new capability at a time. By the end you'll
 have built, run, restricted, and isolated a real subagent against real code
 — not just read about the feature.
