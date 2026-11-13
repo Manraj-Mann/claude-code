@@ -1,10 +1,18 @@
 [
   {
     "title": "Writing a thoughtful CLAUDE.md",
-    "category": "Documentation",
+    "category": "AI",
     "status": "Ready to grow",
     "date": "2026-11-12",
     "summary": "A complete guide to writing concise, useful project instructions for Claude Code, with examples and advanced patterns.",
     "file": "notes/claude-md-field-guide.md"
+  },
+  {
+    "title": "Subagents tutorial",
+    "category": "AI",
+    "status": "Ready to grow",
+    "date": "2026-11-13",
+    "summary": "A guide to using subagents effectively in Claude Code.",
+    "file": "notes/SUBAGENTS_TUTORIAL.md"
   }
 ]

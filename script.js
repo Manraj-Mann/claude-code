@@ -216,7 +216,7 @@ async function openModule(module) {
 
 async function loadManifest() {
   try {
-    const response = await fetch(manifestUrl);
+    const response = await fetch(manifestUrl, { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load manifest.json (HTTP ${response.status}).`);
     const data = await response.json();
     if (!Array.isArray(data)) throw new Error("manifest.json must contain a JSON array of notes.");
